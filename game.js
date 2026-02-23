@@ -1,114 +1,73 @@
 // game.js
 
-// Constants
-const SIZE = 4; // Board size
-const START_TILES = 2; // Number of tiles to start with
-const WINNING_TILE = 2048; // Tile value to win
-
+// Initialize the game board
+const boardSize = 4;
 let board = [];
 let score = 0;
 let isGameOver = false;
 
-// Initialize the game
-function initGame() {
-    board = createEmptyBoard();
-    for (let i = 0; i < START_TILES; i++) {
-        addRandomTile();
-    }
-    score = 0;
-    isGameOver = false;
-    render();
+// Initialize the board with empty tiles and two random tiles
+function initializeBoard() {
+    board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
+    addRandomTile();
+    addRandomTile();
 }
 
-// Create an empty board
-function createEmptyBoard() {
-    return Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
-}
-
-// Add a random tile (2 or 4) to the board
+// Add a random tile (2 or 4) to a random empty position
 function addRandomTile() {
-    let emptyTiles = [];
-    for (let r = 0; r < SIZE; r++) {
-        for (let c = 0; c < SIZE; c++) {
+    const emptyTiles = [];
+    for (let r = 0; r < boardSize; r++) {
+        for (let c = 0; c < boardSize; c++) {
             if (board[r][c] === 0) {
                 emptyTiles.push({ r, c });
             }
         }
     }
     if (emptyTiles.length > 0) {
-        let { r, c } = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+        const { r, c } = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
         board[r][c] = Math.random() < 0.9 ? 2 : 4;
     }
 }
 
-// Handle user input
-document.addEventListener('keydown', handleKey);
-function handleKey(event) {
+// Handle user input for tile movement
+function handleInput(direction) {
     if (isGameOver) return;
-    switch (event.key) {
-        case 'ArrowUp':
-            moveUp();
-            break;
-        case 'ArrowDown':
-            moveDown();
-            break;
-        case 'ArrowLeft':
-            moveLeft();
-            break;
-        case 'ArrowRight':
-            moveRight();
-            break;
+    switch (direction) {
+        case 'up': moveUp(); break;
+        case 'down': moveDown(); break;
+        case 'left': moveLeft(); break;
+        case 'right': moveRight(); break;
     }
     addRandomTile();
-    if (checkWin()) {
-        alert("You win!");
-        isGameOver = true;
-    }
-    if (checkLose()) {
-        alert("Game over!");
-        isGameOver = true;
-    }
-    render();
 }
 
-// Render board to the screen (simple text representation for now)
-function render() {
-    console.clear();
-    console.log(`Score: ${score}`);
-    board.forEach(row => console.log(row.join(' | ')));
+// Implement movement logic (up, down, left, right)
+function moveUp() { /* implement up logic */ }
+function moveDown() { /* implement down logic */ }
+function moveLeft() { /* implement left logic */ }
+function moveRight() { /* implement right logic */ }
+
+// Merging logic
+function mergeTiles() { /* handle merging */ }
+
+// Scoring system
+function updateScore(newScore) {
+    score += newScore;
+    document.getElementById('score').innerText = `Score: ${score}`;
 }
 
-// Movement, merging and score tracking functionality
-function moveUp() { /* Movement logic */ }
-function moveDown() { /* Movement logic */ }
-function moveLeft() { /* Movement logic */ }
-function moveRight() { /* Movement logic */ }
+// Animations for tile movements and merges
+function animateTileMovement() { /* handle animations */ }
 
-// Check for win condition
-function checkWin() {
-    return board.some(row => row.includes(WINNING_TILE));
+// Dark mode toggle
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
 }
 
-// Check for lose condition
-function checkLose() {
-    return board.every(row => !row.includes(0) && !canMerge());
+// Game state management
+function checkGameOver() {
+    // Check if there are no valid moves left
 }
 
-// Check if a move can be made
-function canMerge() {
-    for (let r = 0; r < SIZE; r++) {
-        for (let c = 0; c < SIZE; c++) {
-            if (c < SIZE - 1 && board[r][c] === board[r][c + 1]) return true;
-            if (r < SIZE - 1 && board[r][c] === board[r + 1][c]) return true;
-        }
-    }
-    return false;
-}
-
-// Restart the game functionality
-function restartGame() {
-    initGame();
-}
-
-// Initialize the game when the script loads
-initGame();
+// Start the game
+initializeBoard();

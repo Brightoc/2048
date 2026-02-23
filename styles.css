@@ -1,0 +1,61 @@
+.game {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+.tile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    border-radius: 5px;
+    color: white;
+}
+
+.tile-2 { background: #eee4da; }
+.tile-4 { background: #ede0c8; }
+.tile-8 { background: #f2b179; }
+.tile-16 { background: #f59563; }
+.tile-32 { background: #f67c5f; }
+.tile-64 { background: #f76e30; }
+.tile-128 { background: #f9c74f; }
+.tile-256 { background: #f9c74f; }
+.tile-512 { background: #f9c74f; }
+.tile-1024 { background: #f9c74f; }
+.tile-2048 { background: #edc22e; }
+.tile-4096 { background: #31b848; }
+.tile-8192 { background: #c4e17f; }
+
+@keyframes pop {
+    0% { transform: scale(0.1); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+.tile {
+    animation: pop 0.2s ease; 
+}
+
+body {
+    background-color: #faf8ef;
+    font-family: 'Arial', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #222;
+        color: white;
+    }
+    .tile {
+        color: white;
+    }
+    .tile-2 { background: #766e6c; }
+    .tile-4 { background: #5b4c4a; }
+    .tile-8 { background: #7f4c34; }
+    .tile-16 { background: #7f4c34; }
+    .tile-32 { background: #f76e30; }
+}

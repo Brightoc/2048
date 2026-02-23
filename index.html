@@ -6,74 +6,104 @@
     <meta name="description" content="Play the classic 2048 game online">
     <title>2048 Game</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' font-weight='bold' fill='%23776e65'>2</text></svg>">
 </head>
 <body>
-    <div class="container">
+    <div id="game-container">
         <header>
-            <div class="title-section">
-                <h1>2048</h1>
-                <p class="subtitle">Join the numbers and get to the 2048 tile!</p>
-            </div>
-            <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode">🌙</button>
+            <h1>2048 Game</h1>
+            <button id="dark-mode-toggle" aria-label="Toggle dark mode">🌙 Dark Mode</button>
         </header>
-
-        <div class="game-info">
-            <div class="score-board">
-                <div class="score-container">
-                    <p class="score-label">Score</p>
-                    <p class="score-value" id="score">0</p>
-                </div>
-                <div class="score-container">
-                    <p class="score-label">Best</p>
-                    <p class="score-value" id="best-score">0</p>
-                </div>
+        
+        <div id="score-container">
+            <div id="score">
+                <h2>Score: <span id="score-value">0</span></h2>
+            </div>
+            <div id="best-score">
+                <h2>Best: <span id="best-score-value">0</span></h2>
             </div>
         </div>
-
-        <div id="game-board" class="board" role="grid" aria-label="2048 game board">
-            <!-- Game tiles will be generated here -->
+        
+        <div id="board" role="grid" aria-label="2048 game board"></div>
+        
+        <div id="controls">
+            <button id="restart" aria-label="Restart game">🔄 Restart</button>
+            <button id="help" aria-label="View game instructions">❓ Help</button>
         </div>
 
-        <div class="controls">
-            <button id="new-game" class="btn btn-primary">New Game</button>
-            <button id="help-btn" class="btn btn-secondary">How to Play</button>
-        </div>
-
-        <div id="game-over-modal" class="modal hidden">
+        <div id="instructions" class="modal" hidden>
             <div class="modal-content">
-                <h2 id="game-over-title">Game Over!</h2>
-                <p id="game-over-message">You reached a score of <span id="final-score">0</span></p>
-                <button id="restart-btn" class="btn btn-primary">Play Again</button>
-                <button id="close-modal" class="btn btn-secondary">Close</button>
-            </div>
-        </div>
-
-        <div id="help-modal" class="modal hidden">
-            <div class="modal-content">
-                <button class="close-btn" aria-label="Close help">&times;</button>
-                <h2>How to Play</h2>
-                <ul class="instructions">
-                    <li><strong>Use arrow keys</strong> or <strong>WASD</strong> to move tiles</li>
-                    <li>When two tiles with the same number touch, they <strong>merge into one</strong></li>
-                    <li>Keep combining tiles until you reach <strong>2048</strong></li>
-                    <li>You can continue playing after reaching 2048</li>
-                    <li>Game ends when you can't make any more moves</li>
+                <span class="close">&times;</span>
+                <h3>How to Play 2048</h3>
+                <p><strong>Objective:</strong> Combine tiles with the same number to create a tile with the number 2048!</p>
+                <h4>Controls:</h4>
+                <ul>
+                    <li><strong>Arrow Keys:</strong> Move tiles up, down, left, or right</li>
+                    <li><strong>Mobile:</strong> Swipe in any direction</li>
                 </ul>
-                <h3>Tips:</h3>
-                <ul class="instructions">
-                    <li>Keep your highest value tile in a corner</li>
-                    <li>Plan several moves ahead</li>
-                    <li>Try to keep the board organized</li>
+                <h4>Rules:</h4>
+                <ul>
+                    <li>When two tiles with the same number touch, they merge into one</li>
+                    <li>Each turn, a new tile appears (usually a 2, sometimes a 4)</li>
+                    <li>When you can't move anymore, the game is over</li>
+                    <li>Try to reach 2048!</li>
                 </ul>
             </div>
         </div>
 
-        <footer>
-            <p>Made with ❤️ | 2048 Game</p>
-        </footer>
+        <div id="game-over-modal" class="modal" hidden>
+            <div class="modal-content">
+                <h3>Game Over!</h3>
+                <p>Your Score: <span id="final-score">0</span></p>
+                <button id="play-again">Play Again</button>
+            </div>
+        </div>
+
+        <div id="win-modal" class="modal" hidden>
+            <div class="modal-content">
+                <h3>🎉 You Won! 🎉</h3>
+                <p>You reached 2048! Your Score: <span id="win-score">0</span></p>
+                <button id="continue-playing">Continue Playing</button>
+            </div>
+        </div>
     </div>
-
+    
     <script src="game.js"></script>
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+        }
+        
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+
+        // Help modal
+        const helpBtn = document.getElementById('help');
+        const instructionsModal = document.getElementById('instructions');
+        const closeBtn = document.querySelector('.close');
+
+        helpBtn.addEventListener('click', () => {
+            instructionsModal.removeAttribute('hidden');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            instructionsModal.setAttribute('hidden', '');
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === instructionsModal) {
+                instructionsModal.setAttribute('hidden', '');
+            }
+        });
+
+        if (!window.gameLoaded) {
+            console.error('Game failed to load. Please refresh the page.');
+        }
+    </script>
 </body>
 </html>

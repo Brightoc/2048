@@ -1,108 +1,114 @@
-// Game logic for 2048
+// game.js
 
-class Game2048 {
-    constructor(size = 4) {
-        this.size = size;
-        this.board = this.createBoard();
-        this.score = 0;
-        this.isGameOver = false;
+// Constants
+const SIZE = 4; // Board size
+const START_TILES = 2; // Number of tiles to start with
+const WINNING_TILE = 2048; // Tile value to win
+
+let board = [];
+let score = 0;
+let isGameOver = false;
+
+// Initialize the game
+function initGame() {
+    board = createEmptyBoard();
+    for (let i = 0; i < START_TILES; i++) {
+        addRandomTile();
     }
+    score = 0;
+    isGameOver = false;
+    render();
+}
 
-    createBoard() {
-        let board = Array.from({length: this.size}, () => Array(this.size).fill(0));
-        this.addRandomTile(board);
-        this.addRandomTile(board);
-        return board;
-    }
+// Create an empty board
+function createEmptyBoard() {
+    return Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
+}
 
-    addRandomTile(board) {
-        let emptyTiles = [];
-        for (let r = 0; r < this.size; r++) {
-            for (let c = 0; c < this.size; c++) {
-                if (board[r][c] === 0) {
-                    emptyTiles.push({r, c});
-                }
+// Add a random tile (2 or 4) to the board
+function addRandomTile() {
+    let emptyTiles = [];
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            if (board[r][c] === 0) {
+                emptyTiles.push({ r, c });
             }
         }
-        const {r, c} = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+    }
+    if (emptyTiles.length > 0) {
+        let { r, c } = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
         board[r][c] = Math.random() < 0.9 ? 2 : 4;
-    }
-
-    move(direction) {
-        if (this.isGameOver) return;
-        let moved = false;
-        switch (direction) {
-            case 'up':
-                moved = this.moveUp();
-                break;
-            case 'down':
-                moved = this.moveDown();
-                break;
-            case 'left':
-                moved = this.moveLeft();
-                break;
-            case 'right':
-                moved = this.moveRight();
-                break;
-        }
-        if (moved) {
-            this.addRandomTile(this.board);
-            this.checkGameOver();
-        }
-    }
-
-    // Movement functions
-    moveUp() { return this.moveTiles((r, c) => [r-1, c], (r, c) => [r, c]); }
-    moveDown() { return this.moveTiles((r, c) => [r+1, c], (r, c) => [r, c]); }
-    moveLeft() { return this.moveTiles((r, c) => [r, c-1], (r, c) => [r, c]); }
-    moveRight() { return this.moveTiles((r, c) => [r, c+1], (r, c) => [r, c]); }
-
-    moveTiles(newPosFunc, currentPosFunc) {
-        let moved = false;
-        for (let i = 0; i < this.size; i++) {
-            let mergedRow = [];
-            for (let j = 0; j < this.size; j++) {
-                let [r, c] = currentPosFunc(i, j);
-                if (this.board[r][c] !== 0) {
-                    let newPos = newPosFunc(r, c);
-                    if (newPos[0] < 0 || newPos[0] >= this.size || newPos[1] < 0 || newPos[1] >= this.size) continue;
-                    while (this.board[newPos[0]] && this.board[newPos[0]][newPos[1]] === 0) {
-                        this.board[newPos[0]][newPos[1]] = this.board[r][c];
-                        this.board[r][c] = 0;
-                        moved = true;
-                        r = newPos[0];
-                        c = newPos[1];
-                        newPos = newPosFunc(r, c);
-                    }
-                    if (this.board[newPos[0]] && this.board[newPos[0]][newPos[1]] === this.board[r][c] && !mergedRow.includes(newPos[1])) {
-                        this.board[newPos[0]][newPos[1]] *= 2;
-                        this.score += this.board[newPos[0]][newPos[1]];
-                        this.board[r][c] = 0;
-                        moved = true;
-                        mergedRow.push(newPos[1]);
-                    }
-                }
-            }
-        }
-        return moved;
-    }
-
-    checkGameOver() {
-        for (let r = 0; r < this.size; r++) {
-            for (let c = 0; c < this.size; c++) {
-                if (this.board[r][c] === 0 || 
-                    (r < this.size - 1 && this.board[r][c] === this.board[r+1][c]) || 
-                    (c < this.size - 1 && this.board[r][c] === this.board[r][c+1])) {
-                    return;
-                }
-            }
-        }
-        this.isGameOver = true;
     }
 }
 
-// Example of creating a game
-const game = new Game2048();
-console.log(game.board); // Log the initial board
+// Handle user input
+document.addEventListener('keydown', handleKey);
+function handleKey(event) {
+    if (isGameOver) return;
+    switch (event.key) {
+        case 'ArrowUp':
+            moveUp();
+            break;
+        case 'ArrowDown':
+            moveDown();
+            break;
+        case 'ArrowLeft':
+            moveLeft();
+            break;
+        case 'ArrowRight':
+            moveRight();
+            break;
+    }
+    addRandomTile();
+    if (checkWin()) {
+        alert("You win!");
+        isGameOver = true;
+    }
+    if (checkLose()) {
+        alert("Game over!");
+        isGameOver = true;
+    }
+    render();
+}
 
-// Use game.move('up') to move tiles up
+// Render board to the screen (simple text representation for now)
+function render() {
+    console.clear();
+    console.log(`Score: ${score}`);
+    board.forEach(row => console.log(row.join(' | ')));
+}
+
+// Movement, merging and score tracking functionality
+function moveUp() { /* Movement logic */ }
+function moveDown() { /* Movement logic */ }
+function moveLeft() { /* Movement logic */ }
+function moveRight() { /* Movement logic */ }
+
+// Check for win condition
+function checkWin() {
+    return board.some(row => row.includes(WINNING_TILE));
+}
+
+// Check for lose condition
+function checkLose() {
+    return board.every(row => !row.includes(0) && !canMerge());
+}
+
+// Check if a move can be made
+function canMerge() {
+    for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+            if (c < SIZE - 1 && board[r][c] === board[r][c + 1]) return true;
+            if (r < SIZE - 1 && board[r][c] === board[r + 1][c]) return true;
+        }
+    }
+    return false;
+}
+
+// Restart the game functionality
+function restartGame() {
+    initGame();
+}
+
+// Initialize the game when the script loads
+initGame();

@@ -3,32 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Play the classic 2048 game online">
     <title>2048 Game</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='90' font-weight='bold' fill='%23776e65'>2</text></svg>">
 </head>
 <body>
-    <div id="game">
-        <h1>2048 Game</h1>
-        <div id="score">
-            <h2>Score: <span id="score-value">0</span></h2>
-        </div>
-        <div id="board"></div>
-        <button id="restart">Restart</button>
-        <button id="leaderboard">View Leaderboard</button>
-    </div>
-    <script src="game.js"></script>
-    <script>
-        // Dark mode functionality
-        const toggleDarkMode = () => {
-            document.body.classList.toggle('dark-mode');
-        };
-        document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+    <div class="container">
+        <header>
+            <div class="title-section">
+                <h1>2048</h1>
+                <p class="subtitle">Join the numbers and get to the 2048 tile!</p>
+            </div>
+            <button id="dark-mode-toggle" class="dark-mode-btn" aria-label="Toggle dark mode">🌙</button>
+        </header>
 
-        // Animation features
-        const addAnimation = (element) => {
-            element.classList.add('animate');
-        };
-        // Integrate animations in game logic
-    </script>
+        <div class="game-info">
+            <div class="score-board">
+                <div class="score-container">
+                    <p class="score-label">Score</p>
+                    <p class="score-value" id="score">0</p>
+                </div>
+                <div class="score-container">
+                    <p class="score-label">Best</p>
+                    <p class="score-value" id="best-score">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-board" class="board" role="grid" aria-label="2048 game board">
+            <!-- Game tiles will be generated here -->
+        </div>
+
+        <div class="controls">
+            <button id="new-game" class="btn btn-primary">New Game</button>
+            <button id="help-btn" class="btn btn-secondary">How to Play</button>
+        </div>
+
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="game-over-title">Game Over!</h2>
+                <p id="game-over-message">You reached a score of <span id="final-score">0</span></p>
+                <button id="restart-btn" class="btn btn-primary">Play Again</button>
+                <button id="close-modal" class="btn btn-secondary">Close</button>
+            </div>
+        </div>
+
+        <div id="help-modal" class="modal hidden">
+            <div class="modal-content">
+                <button class="close-btn" aria-label="Close help">&times;</button>
+                <h2>How to Play</h2>
+                <ul class="instructions">
+                    <li><strong>Use arrow keys</strong> or <strong>WASD</strong> to move tiles</li>
+                    <li>When two tiles with the same number touch, they <strong>merge into one</strong></li>
+                    <li>Keep combining tiles until you reach <strong>2048</strong></li>
+                    <li>You can continue playing after reaching 2048</li>
+                    <li>Game ends when you can't make any more moves</li>
+                </ul>
+                <h3>Tips:</h3>
+                <ul class="instructions">
+                    <li>Keep your highest value tile in a corner</li>
+                    <li>Plan several moves ahead</li>
+                    <li>Try to keep the board organized</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>Made with ❤️ | 2048 Game</p>
+        </footer>
+    </div>
+
+    <script src="game.js"></script>
 </body>
 </html>
